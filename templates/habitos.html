@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Mis hábitos - Habit Tracker{% endblock %}
+
+{% block content %}
+<h1>📈 Hola, {{ usuario.nombre }}</h1>
+
+<div class="nav">
+    <a href="/habitos">📈 Hábitos</a>
+    <a href="/semanas">📅 Semanas</a>
+    <a href="/logout" style="margin-left: auto;">🚪 Salir</a>
+</div>
+
+<h2>Tus hábitos</h2>
+
+{% if usuario.listar_habitos() %}
+    {% for h in usuario.listar_habitos() %}
+        <div class="habit-item">
+            <div class="habit-info">
+                <div class="habit-name">
+                    {% if h.esta_completado_hoy() %}✅{% else %}⭕{% endif %} {{ h.nombre }}
+                </div>
+                <div class="habit-stats">
+                    <span class="badge badge-streak">🔥 Racha: {{ h.racha_actual() }} días</span>
+                    <span style="margin-left: 8px; color: #a0aec0;">Mejor: {{ h.mejor_racha() }} días</span>
+                </div>
+            </div>
+            <div class="actions">
+                {% if not h.esta_completado_hoy() %}
+                <form method="POST" action="/habito/completar">
+                    <input type="hidden" name="nombre" value="{{ h.nombre }}">
+                    <button type="submit" class="btn-small btn-success">✅ Completar</button>
+                </form>
+                {% endif %}
+                <form method="POST" action="/habito/eliminar" onsubmit="return confirm('¿Seguro que quieres eliminar este hábito?');">
+                    <input type="hidden" name="nombre" value="{{ h.nombre }}">
+                    <button type="submit" class="btn-small btn-danger">🗑️</button>
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">🌱</div>
+        <p>No tienes hábitos todavía</p>
+        <p style="font-size: 0.875rem; margin-top: 8px;">¡Crea tu primer hábito para empezar!</p>
+    </div>
+{% endif %}
+
+<h3>➕ Crear nuevo hábito</h3>
+<form method="POST" action="/habito/nuevo" style="display: flex; gap: 12px;">
+    <input type="text" name="nombre" placeholder="Ej: Meditar 10 minutos" required style="flex: 1; margin-bottom: 0;">
+    <button type="submit" class="btn-success">Crear</button>
+</form>
+{% endblock %}

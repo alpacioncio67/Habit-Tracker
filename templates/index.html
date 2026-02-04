@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Habit Tracker</title>
+    <style>body{padding:50px;font-family:Arial;}</style>
+</head>
+<body>
+    <h1>🎯 Habit Tracker</h1>
+    <p>Hola {{ session.usuario }}! <a href="/logout">Salir</a></p>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color:green;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <h2>Crear Usuario</h2>
+    <form method="POST" action="/usuario/nuevo">
+        <input name="nombre" placeholder="Nombre" required>
+        <input name="contraseña" type="password" placeholder="Contraseña" required>
+        <button>Crear</button>
+    </form>
+    
+    {% if usuarios %}
+        <h2>Usuarios:</h2>
+        <ul>
+            {% for u in usuarios %}
+                <li><a href="/usuario/{{ u.nombre }}">{{ u.nombre }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
