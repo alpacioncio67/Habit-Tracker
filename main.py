@@ -53,6 +53,21 @@ def cargar_usuarios():
 
 cargar_usuarios()
 
+def obtener_usuario_actual():
+    """
+    Obtiene el usuario actual de la sesión.
+    Si no hay sesión o el usuario no existe, redirige a login.
+    """
+    if "usuario" not in session:
+        return None
+    
+    nombre_usuario = session["usuario"]
+    if nombre_usuario not in usuarios:
+        session.clear()
+        return None
+    
+    return usuarios[nombre_usuario]
+
 @app.route("/")
 def home():
     if "usuario" in session:
@@ -61,6 +76,11 @@ def home():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    # Limpiar sesión si el usuario ya no existe
+    if "usuario" in session and session["usuario"] not in usuarios:
+        session.clear()
+        flash("Tu sesión anterior ha expirado", "info")
+    
     if request.method == "POST":
         nombre = request.form.get("nombre", "").strip()
         contraseña = request.form.get("contraseña", "").strip()
@@ -111,25 +131,28 @@ def eliminar_cuenta():
 
 @app.route("/habitos")
 def habitos():
-    if "usuario" not in session: 
+    usuario = obtener_usuario_actual()
+    if not usuario:
+        flash("Tu sesión ha expirado", "info")
         return redirect("/login")
-    usuario = usuarios[session["usuario"]]
     return render_template("habitos.html", usuario=usuario)
 
 @app.route("/semanas")
 def semanas():
-    if "usuario" not in session: 
+    usuario = obtener_usuario_actual()
+    if not usuario:
+        flash("Tu sesión ha expirado", "info")
         return redirect("/login")
-    usuario = usuarios[session["usuario"]]
     return render_template("semanas.html", usuario=usuario)
 
 # ===== RUTAS DE HÁBITOS =====
 
 @app.route("/habito/nuevo", methods=["POST"])
 def habito_nuevo():
-    if "usuario" not in session:
+    usuario = obtener_usuario_actual()
+    if not usuario:
+        flash("Tu sesión ha expirado", "info")
         return redirect("/login")
-    usuario = usuarios[session["usuario"]]
     try:
         nombre = request.form.get("nombre", "").strip()
         if nombre:
@@ -144,9 +167,10 @@ def habito_nuevo():
 
 @app.route("/habito/completar", methods=["POST"])
 def habito_completar():
-    if "usuario" not in session:
+    usuario = obtener_usuario_actual()
+    if not usuario:
+        flash("Tu sesión ha expirado", "info")
         return redirect("/login")
-    usuario = usuarios[session["usuario"]]
     nombre = request.form.get("nombre", "").strip()
     h = usuario.obtener_habito(nombre)
     if h:
@@ -159,9 +183,10 @@ def habito_completar():
 
 @app.route("/habito/eliminar", methods=["POST"])
 def habito_eliminar():
-    if "usuario" not in session:
+    usuario = obtener_usuario_actual()
+    if not usuario:
+        flash("Tu sesión ha expirado", "info")
         return redirect("/login")
-    usuario = usuarios[session["usuario"]]
     nombre = request.form.get("nombre", "").strip()
     usuario.eliminar_habito(nombre)
     guardar_usuarios()
@@ -172,9 +197,10 @@ def habito_eliminar():
 
 @app.route("/semana/nueva", methods=["POST"])
 def semana_nueva():
-    if "usuario" not in session:
+    usuario = obtener_usuario_actual()
+    if not usuario:
+        flash("Tu sesión ha expirado", "info")
         return redirect("/login")
-    usuario = usuarios[session["usuario"]]
     objetivos_texto = request.form.get("objetivos", "")
     objetivos = [o.strip() for o in objetivos_texto.splitlines() if o.strip()]
     usuario.crear_semana(objetivos)
@@ -184,9 +210,10 @@ def semana_nueva():
 
 @app.route("/semana/objetivo/nuevo", methods=["POST"])
 def semana_objetivo_nuevo():
-    if "usuario" not in session:
+    usuario = obtener_usuario_actual()
+    if not usuario:
+        flash("Tu sesión ha expirado", "info")
         return redirect("/login")
-    usuario = usuarios[session["usuario"]]
     semana = usuario.ultima_semana()
     if not semana:
         flash("No hay semana creada", "error")
@@ -201,9 +228,10 @@ def semana_objetivo_nuevo():
 
 @app.route("/semana/objetivo/completar", methods=["POST"])
 def semana_objetivo_completar():
-    if "usuario" not in session:
+    usuario = obtener_usuario_actual()
+    if not usuario:
+        flash("Tu sesión ha expirado", "info")
         return redirect("/login")
-    usuario = usuarios[session["usuario"]]
     semana = usuario.ultima_semana()
     if not semana:
         flash("No hay semana creada", "error")
@@ -218,9 +246,10 @@ def semana_objetivo_completar():
 
 @app.route("/semana/reflexion", methods=["POST"])
 def semana_reflexion():
-    if "usuario" not in session:
+    usuario = obtener_usuario_actual()
+    if not usuario:
+        flash("Tu sesión ha expirado", "info")
         return redirect("/login")
-    usuario = usuarios[session["usuario"]]
     semana = usuario.ultima_semana()
     if not semana:
         flash("No hay semana creada", "error")
