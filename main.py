@@ -90,6 +90,25 @@ def logout():
     flash("Sesión cerrada", "info")
     return redirect("/login")
 
+@app.route("/cuenta/eliminar", methods=["POST"])
+def eliminar_cuenta():
+    """Permite al usuario eliminar su propia cuenta"""
+    if "usuario" not in session:
+        return redirect("/login")
+    
+    nombre = session["usuario"]
+    confirmacion = request.form.get("confirmacion", "").strip()
+    
+    if confirmacion == nombre:
+        usuarios.pop(nombre, None)
+        guardar_usuarios()
+        session.clear()
+        flash(f"Cuenta '{nombre}' eliminada correctamente", "info")
+        return redirect("/login")
+    else:
+        flash("Confirmación incorrecta. Debes escribir tu nombre de usuario", "error")
+        return redirect("/habitos")
+
 @app.route("/habitos")
 def habitos():
     if "usuario" not in session: 
