@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ usuario.nombre }}</title>
+</head>
+<body>
+    <h1>{{ usuario.nombre }}</h1>
+    <p><a href="/">Inicio</a></p>
+    
+    <h2>📈 Hábitos</h2>
+    {% if usuario.listar_habitos() %}
+        <ul>
+            {% for h in usuario.listar_habitos() %}
+                <li>
+                    {{ h }} 
+                    <form method="POST" action="/usuario/{{ usuario.nombre }}/habito/completar" style="display:inline;">
+                        <input type="hidden" name="habito_nombre" value="{{ h.nombre }}">
+                        <button type="submit">✅ Completar hoy</button>
+                    </form>
+                    <form method="POST" action="/usuario/{{ usuario.nombre }}/habito/eliminar" style="display:inline;">
+                        <input type="hidden" name="habito_nombre" value="{{ h.nombre }}">
+                        <button type="submit">🗑️ Eliminar</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No tienes hábitos aún</p>
+    {% endif %}
+    
+    <h3>➕ Nuevo hábito:</h3>
+    <form method="POST" action="/usuario/{{ usuario.nombre }}/habito/nuevo">
+        <input name="nombre" placeholder="ej: Meditar 10min" required>
+        <button>Añadir hábito</button>
+    </form>
+    
+    <h2>📅 Gestión de semanas</h2>
+    <p><a href="/usuario/{{ usuario.nombre }}/semana/nueva">➕ Nueva semana</a></p>
+    
+</body>
+</html>

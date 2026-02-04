@@ -1,0 +1,107 @@
+Semanas · HTML
+Copiar
+
+{% extends "base.html" %}
+
+{% block title %}Mis semanas - Habit Tracker{% endblock %}
+
+{% block content %}
+<h1>📅 Mis semanas</h1>
+
+<div class="nav">
+    <a href="/habitos">📈 Hábitos</a>
+    <a href="/semanas">📅 Semanas</a>
+    <a href="/logout" style="margin-left: auto;">🚪 Salir</a>
+</div>
+
+{% set semana = usuario.ultima_semana() %}
+
+{% if semana %}
+    <h2>Semana actual</h2>
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div>
+                <strong>Inicio:</strong> {{ semana.fecha_inicio.strftime('%d/%m/%Y') }}
+            </div>
+            <div>
+                <span class="badge badge-completed">{{ semana.objetivos_completados|length }}/{{ semana.objetivos|length }} completados</span>
+            </div>
+        </div>
+        
+        {% if semana.objetivos %}
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ semana.progreso() * 100 }}%;"></div>
+            </div>
+            <div style="text-align: right; font-size: 0.875rem; color: #718096; margin-top: 4px;">
+                {{ "%.0f"|format(semana.progreso() * 100) }}% completado
+            </div>
+        {% endif %}
+    </div>
+
+    <h3>📋 Objetivos de la semana</h3>
+    {% if semana.objetivos %}
+        {% for obj in semana.objetivos %}
+            <div class="objetivo-item">
+                <div style="flex: 1;">
+                    {% if obj in semana.objetivos_completados %}
+                        <span style="color: #38a169; font-weight: 600;">✅</span>
+                    {% else %}
+                        <span style="color: #cbd5e0;">⭕</span>
+                    {% endif %}
+                    <span {% if obj in semana.objetivos_completados %}style="text-decoration: line-through; color: #a0aec0;"{% endif %}>
+                        {{ obj }}
+                    </span>
+                </div>
+                {% if obj not in semana.objetivos_completados %}
+                <div class="actions">
+                    <form method="POST" action="/semana/objetivo/completar">
+                        <input type="hidden" name="objetivo" value="{{ obj }}">
+                        <button type="submit" class="btn-small btn-success">✅ Completar</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <p>Sin objetivos para esta semana</p>
+        </div>
+    {% endif %}
+
+    <h3>➕ Añadir objetivo</h3>
+    <form method="POST" action="/semana/objetivo/nuevo" style="display: flex; gap: 12px;">
+        <input type="text" name="objetivo" placeholder="Nuevo objetivo para esta semana" required style="flex: 1; margin-bottom: 0;">
+        <button type="submit">Añadir</button>
+    </form>
+
+    <h3>💭 Reflexión de la semana</h3>
+    <form method="POST" action="/semana/reflexion">
+        <textarea name="reflexion" rows="5" placeholder="¿Cómo ha ido la semana? ¿Qué has aprendido?">{{ semana.reflexion }}</textarea>
+        <button type="submit" class="btn-success">💾 Guardar reflexión</button>
+    </form>
+
+{% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📅</div>
+        <p>No tienes ninguna semana creada</p>
+        <p style="font-size: 0.875rem; margin-top: 8px;">¡Crea tu primera semana para empezar!</p>
+    </div>
+{% endif %}
+
+<h2 style="margin-top: 40px;">🚀 Crear nueva semana</h2>
+<form method="POST" action="/semana/nueva">
+    <div class="form-group">
+        <label for="objetivos">Objetivos (uno por línea)</label>
+        <textarea id="objetivos" name="objetivos" rows="6" placeholder="Terminar proyecto X&#10;Hacer ejercicio 3 veces&#10;Leer 50 páginas"></textarea>
+    </div>
+    <button type="submit" style="width: 100%;">📅 Crear semana</button>
+</form>
+
+{% if semana %}
+<p style="margin-top: 16px; padding: 12px; background: #fef5e7; border-left: 4px solid #f39c12; border-radius: 8px; font-size: 0.875rem; color: #7d6608;">
+    <strong>Nota:</strong> Al crear una nueva semana, se archivará la actual y comenzarás con objetivos en blanco.
+</p>
+{% endif %}
+
+{% endblock %}
