@@ -101,4 +101,70 @@
 </p>
 {% endif %}
 
+<!-- Historial de Semanas -->
+{% if usuario.semanas|length > 1 %}
+<h2 style="margin-top: 48px;">📚 Historial de Semanas</h2>
+<p style="color: #718096; margin-bottom: 16px;">Revisa tus semanas anteriores y reflexiones pasadas</p>
+
+{% for semana_historica in usuario.semanas[:-1]|reverse %}
+    <div class="card" style="margin-bottom: 16px; {% if loop.index > 3 %}display: none;{% endif %}" id="semana-{{ loop.index }}">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div>
+                <strong>📅 Semana del {{ semana_historica.fecha_inicio.strftime('%d/%m/%Y') }}</strong>
+            </div>
+            <div>
+                <span class="badge badge-completed">
+                    {{ semana_historica.objetivos_completados|length }}/{{ semana_historica.objetivos|length }} completados
+                    ({{ "%.0f"|format(semana_historica.progreso() * 100) }}%)
+                </span>
+            </div>
+        </div>
+        
+        {% if semana_historica.objetivos %}
+            <div style="margin-top: 12px;">
+                <strong style="color: #4a5568; font-size: 0.875rem;">Objetivos:</strong>
+                <ul style="margin-top: 8px; margin-left: 20px; color: #718096; font-size: 0.875rem;">
+                    {% for obj in semana_historica.objetivos %}
+                        <li style="margin-bottom: 4px;">
+                            {% if obj in semana_historica.objetivos_completados %}
+                                <span style="color: #38a169;">✅</span> <span style="text-decoration: line-through;">{{ obj }}</span>
+                            {% else %}
+                                <span style="color: #cbd5e0;">⭕</span> {{ obj }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        {% if semana_historica.reflexion %}
+            <div style="margin-top: 12px; padding: 12px; background: #f7fafc; border-radius: 8px; border-left: 3px solid #667eea;">
+                <strong style="color: #4a5568; font-size: 0.875rem;">💭 Reflexión:</strong>
+                <p style="margin-top: 8px; color: #718096; font-size: 0.875rem; font-style: italic;">
+                    "{{ semana_historica.reflexion }}"
+                </p>
+            </div>
+        {% endif %}
+    </div>
+{% endfor %}
+
+{% if usuario.semanas|length > 4 %}
+<div style="text-align: center; margin-top: 16px;">
+    <button onclick="mostrarMasSemanasHistoricas()" id="btnMostrarMas" style="background: #718096;">
+        Ver más semanas ({{ usuario.semanas|length - 4 }} anteriores)
+    </button>
+</div>
+
+<script>
+function mostrarMasSemanasHistoricas() {
+    const semanas = document.querySelectorAll('[id^="semana-"]');
+    semanas.forEach(semana => {
+        semana.style.display = 'block';
+    });
+    document.getElementById('btnMostrarMas').style.display = 'none';
+}
+</script>
+{% endif %}
+{% endif %}
+
 {% endblock %}
