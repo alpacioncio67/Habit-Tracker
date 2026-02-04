@@ -15,26 +15,31 @@ class Habito:
         hoy = datetime.date.today()
         return hoy in self.fechas_completadas
 
-def racha_actual(self) -> int:
-    if not self.fechas_completadas:
-        return 0
-    
-    hoy = datetime.date.today()
-    ayer = hoy - datetime.timedelta(days=1)
-    
-    # ✅ Racha continúa si completaste hoy O ayer
-    if hoy not in self.fechas_completadas and ayer not in self.fechas_completadas:
-        return 0
-    
-    # Comenzar desde el día más reciente
-    dia_inicio = hoy if hoy in self.fechas_completadas else ayer
-    
-    racha = 0
-    dia = dia_inicio
-    while dia in self.fechas_completadas:
-        racha += 1
-        dia = dia - datetime.timedelta(days=1)
-    return racha
+    def racha_actual(self) -> int:
+        """
+        Calcula la racha actual del hábito.
+        La racha se mantiene si completaste hoy o ayer (1 día de gracia).
+        Si pasaron 2+ días sin completar, la racha se reinicia a 0.
+        """
+        if not self.fechas_completadas:
+            return 0
+        
+        hoy = datetime.date.today()
+        ayer = hoy - datetime.timedelta(days=1)
+        
+        # Si no completaste ni hoy ni ayer, racha rota
+        if hoy not in self.fechas_completadas and ayer not in self.fechas_completadas:
+            return 0
+        
+        # Comenzar desde el día más reciente (hoy o ayer)
+        dia_inicio = hoy if hoy in self.fechas_completadas else ayer
+        
+        racha = 0
+        dia = dia_inicio
+        while dia in self.fechas_completadas:
+            racha += 1
+            dia = dia - datetime.timedelta(days=1)
+        return racha
 
     def mejor_racha(self) -> int:
         if not self.fechas_completadas:
@@ -63,7 +68,7 @@ class Usuario:
         self.nombre = nombre
         self._contraseña = contraseña
         self.habitos: dict[str, Habito] = {}
-        self.semanas: list[Semana] = []  # adelantamos el tipo con string si hace falta
+        self.semanas: list[Semana] = []
 
     def crear_habito(self, nombre_habito: str) -> Habito:
         if nombre_habito in self.habitos:
