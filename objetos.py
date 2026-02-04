@@ -15,18 +15,26 @@ class Habito:
         hoy = datetime.date.today()
         return hoy in self.fechas_completadas
 
-    def racha_actual(self) -> int:
-        if not self.fechas_completadas:
-            return 0
-        hoy = datetime.date.today()
-        if hoy not in self.fechas_completadas:
-            return 0
-        racha = 0
-        dia = hoy
-        while dia in self.fechas_completadas:
-            racha += 1
-            dia = dia - datetime.timedelta(days=1)
-        return racha
+def racha_actual(self) -> int:
+    if not self.fechas_completadas:
+        return 0
+    
+    hoy = datetime.date.today()
+    ayer = hoy - datetime.timedelta(days=1)
+    
+    # ✅ Racha continúa si completaste hoy O ayer
+    if hoy not in self.fechas_completadas and ayer not in self.fechas_completadas:
+        return 0
+    
+    # Comenzar desde el día más reciente
+    dia_inicio = hoy if hoy in self.fechas_completadas else ayer
+    
+    racha = 0
+    dia = dia_inicio
+    while dia in self.fechas_completadas:
+        racha += 1
+        dia = dia - datetime.timedelta(days=1)
+    return racha
 
     def mejor_racha(self) -> int:
         if not self.fechas_completadas:
