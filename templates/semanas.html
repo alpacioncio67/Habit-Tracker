@@ -1,6 +1,3 @@
-Semanas · HTML
-Copiar
-
 {% extends "base.html" %}
 
 {% block title %}Mis semanas - Habit Tracker{% endblock %}
@@ -54,7 +51,7 @@ Copiar
                 </div>
                 {% if obj not in semana.objetivos_completados %}
                 <div class="actions">
-                    <form method="POST" action="/semana/objetivo/completar">
+                    <form method="POST" autocomplete="off" action="/semana/objetivo/completar">
                         <input type="hidden" name="objetivo" value="{{ obj }}">
                         <button type="submit" class="btn-small btn-success">✅ Completar</button>
                     </form>
@@ -70,14 +67,14 @@ Copiar
     {% endif %}
 
     <h3>➕ Añadir objetivo</h3>
-    <form method="POST" action="/semana/objetivo/nuevo" style="display: flex; gap: 12px;">
-        <input type="text" name="objetivo" placeholder="Nuevo objetivo para esta semana" required style="flex: 1; margin-bottom: 0;">
+    <form method="POST" autocomplete="off" action="/semana/objetivo/nuevo" style="display: flex; gap: 12px;">
+        <input type="text" autocomplete="off" name="objetivo" placeholder="Nuevo objetivo para esta semana" required style="flex: 1; margin-bottom: 0;">
         <button type="submit">Añadir</button>
     </form>
 
     <h3>💭 Reflexión de la semana</h3>
-    <form method="POST" action="/semana/reflexion">
-        <textarea name="reflexion" rows="5" placeholder="¿Cómo ha ido la semana? ¿Qué has aprendido?">{{ semana.reflexion }}</textarea>
+    <form method="POST" autocomplete="off" action="/semana/reflexion">
+        <textarea autocomplete="off" name="reflexion" rows="5" placeholder="¿Cómo ha ido la semana? ¿Qué has aprendido?">{{ semana.reflexion }}</textarea>
         <button type="submit" class="btn-success">💾 Guardar reflexión</button>
     </form>
 
@@ -90,10 +87,10 @@ Copiar
 {% endif %}
 
 <h2 style="margin-top: 40px;">🚀 Crear nueva semana</h2>
-<form method="POST" action="/semana/nueva">
+<form method="POST" autocomplete="off" action="/semana/nueva">
     <div class="form-group">
         <label for="objetivos">Objetivos (uno por línea)</label>
-        <textarea id="objetivos" name="objetivos" rows="6" placeholder="Terminar proyecto X&#10;Hacer ejercicio 3 veces&#10;Leer 50 páginas"></textarea>
+        <textarea autocomplete="off" id="objetivos" name="objetivos" rows="6" placeholder="Terminar proyecto X&#10;Hacer ejercicio 3 veces&#10;Leer 50 páginas"></textarea>
     </div>
     <button type="submit" style="width: 100%;">📅 Crear semana</button>
 </form>

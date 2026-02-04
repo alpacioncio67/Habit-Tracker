@@ -8,7 +8,8 @@
 <div class="nav">
     <a href="/habitos">📈 Hábitos</a>
     <a href="/semanas">📅 Semanas</a>
-    <a href="/logout" style="margin-left: auto;">🚪 Salir</a>
+    <a href="#" onclick="document.getElementById('modalEliminar').style.display='block'" style="margin-left: auto; color: #e53e3e;">⚙️ Cuenta</a>
+    <a href="/logout">🚪 Salir</a>
 </div>
 
 <h2>Tus hábitos</h2>
@@ -48,8 +49,28 @@
 {% endif %}
 
 <h3>➕ Crear nuevo hábito</h3>
-<form method="POST" action="/habito/nuevo" style="display: flex; gap: 12px;">
-    <input type="text" name="nombre" placeholder="Ej: Meditar 10 minutos" required style="flex: 1; margin-bottom: 0;">
+<form method="POST" action="/habito/nuevo" style="display: flex; gap: 12px;" autocomplete="off">
+    <input type="text" name="nombre" placeholder="Ej: Meditar 10 minutos" required style="flex: 1; margin-bottom: 0;" autocomplete="off">
     <button type="submit" class="btn-success">Crear</button>
 </form>
+
+<!-- Modal para eliminar cuenta -->
+<div id="modalEliminar" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div style="max-width: 500px; margin: 100px auto; background: white; padding: 32px; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+        <h2 style="color: #e53e3e; margin-top: 0;">⚠️ Eliminar cuenta</h2>
+        <p style="color: #718096; margin-bottom: 24px;">Esta acción es <strong>irreversible</strong>. Se eliminarán todos tus hábitos, semanas y datos.</p>
+        
+        <form method="POST" action="/cuenta/eliminar" autocomplete="off">
+            <div class="form-group">
+                <label for="confirmacion">Para confirmar, escribe tu nombre de usuario: <strong>{{ usuario.nombre }}</strong></label>
+                <input type="text" id="confirmacion" name="confirmacion" placeholder="Tu nombre de usuario" required autocomplete="off">
+            </div>
+            
+            <div style="display: flex; gap: 12px;">
+                <button type="button" onclick="document.getElementById('modalEliminar').style.display='none'" style="flex: 1; background: #718096;">Cancelar</button>
+                <button type="submit" class="btn-danger" style="flex: 1;">Eliminar cuenta</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
