@@ -21,9 +21,7 @@ Una aplicación web moderna y minimalista para gestionar tus hábitos diarios y 
 ### Características Técnicas
 -  Sistema de autenticación
 -  Persistencia automática de datos (JSON)
--  Diseño responsivo
--  Interfaz moderna con gradientes
--  Sin autocompletado (mayor privacidad)
+-  Interfaz moderna
 -  Eliminar cuenta cuando quieras
 
 ---
@@ -141,11 +139,9 @@ Ideas para extender el proyecto:
 
 - [ ] Gráficos de progreso (Chart.js)
 - [ ] Exportar a PDF/CSV
-- [ ] Categorías de hábitos
 - [ ] Recordatorios por email
 - [ ] Tema oscuro
 - [ ] Estadísticas mensuales
-- [ ] App móvil
 - [ ] Base de datos SQL
 
 ---
