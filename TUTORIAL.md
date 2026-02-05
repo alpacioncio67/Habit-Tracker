@@ -8,19 +8,17 @@
 ### ¿Qué vamos a construir?
 
 Una aplicación web completa para:
-- ✅ Gestionar hábitos diarios
-- 📊 Ver rachas de cumplimiento
-- 📅 Planificar objetivos semanales
-- 💭 Escribir reflexiones
-- 📚 Ver historial completo
+-  Gestionar hábitos diarios
+-  Ver rachas de cumplimiento
+-  Planificar objetivos semanales
+-  Escribir reflexiones
+-  Ver historial completo
 
 ### Tecnologías utilizadas
 
 - **Python 3.8+**: Lenguaje de programación
 - **Flask**: Framework web minimalista
-- **Jinja2**: Motor de plantillas HTML
 - **JSON**: Almacenamiento de datos
-- **CSS**: Diseño moderno
 
 ---
 
@@ -31,7 +29,6 @@ Una aplicación web completa para:
 - ✅ Python básico (variables, funciones, clases)
 - ✅ HTML básico (etiquetas, formularios)
 - ✅ CSS básico (colores, layouts)
-- ⭕ JavaScript (opcional, lo explicaremos)
 
 ### Software Necesario
 
